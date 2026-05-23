@@ -45,7 +45,6 @@ const Navbar = () => {
             </span>
                     </Link>
 
-                    {/* Desktop Nav */}
                     <nav className="hidden md:flex items-center gap-10 text-[14px] font-medium tracking-[0.15em] uppercase text-[#93856d]">
                         {[
                             { name: 'Vision', path: '/vision' },
@@ -64,7 +63,6 @@ const Navbar = () => {
                         ))}
                     </nav>
 
-                    {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="relative md:hidden w-10 h-10 flex flex-col justify-center items-center rounded-full border border-[#e3d5ba]/10 bg-black/20 backdrop-blur-md transition-colors duration-300 hover:border-[#e3d5ba]/30 z-50 focus:outline-none"
@@ -93,7 +91,6 @@ const Navbar = () => {
                 </div>
             </header>
 
-            {/* Mobile Menu */}
             <div
                 className={`fixed inset-0 bg-black/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center transition-all duration-500 ease-in-out md:hidden
           ${
