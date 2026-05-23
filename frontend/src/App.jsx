@@ -4,6 +4,7 @@ import Vision from "./pages/Vision.jsx";
 import Navbar from "./components/Navbar.jsx";
 import React from "react";
 import Footer from "./components/Footer.jsx";
+import GetStarted from "./pages/GetStarted.jsx";
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/vision" element={<Vision />} />
+                <Route path="/getstarted" element={<GetStarted />} />
                 {/*<Route path="/shop" element={<Shop />} />*/}
                 {/*<Route path="/aboutus" element={<AboutUs />} />*/}
 

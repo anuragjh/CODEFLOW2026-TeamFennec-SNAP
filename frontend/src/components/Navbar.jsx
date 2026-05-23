@@ -37,11 +37,11 @@ const Navbar = () => {
                         className="group relative text-[24px] font-black tracking-[0.25em] text-[#e3d5ba] font-mono select-none overflow-hidden block"
                     >
             <span className="relative inline-block transition-transform duration-500 ease-out group-hover:-translate-y-full">
-              SNAP
+              BUDLY
             </span>
 
                         <span className="absolute left-0 top-0 inline-block transition-transform duration-500 ease-out translate-y-full group-hover:translate-y-0 text-white">
-              SNAP
+              BUDLY
             </span>
                     </Link>
 
@@ -49,7 +49,7 @@ const Navbar = () => {
                         {[
                             { name: 'Vision', path: '/vision' },
                             { name: 'Careers', path: '/careers' },
-                            { name: 'Contact', path: '/contact' },
+                            { name: 'Get Started', path: '/getstarted' },
                         ].map((item) => (
                             <Link
                                 key={item.name}
@@ -104,7 +104,7 @@ const Navbar = () => {
                     {[
                         { name: 'Vision', path: '/vision' },
                         { name: 'Careers', path: '/careers' },
-                        { name: 'Contact', path: '/contact' },
+                        { name: 'Get Started', path: '/getstarted' },
                     ].map((item, index) => (
                         <Link
                             key={item.name}

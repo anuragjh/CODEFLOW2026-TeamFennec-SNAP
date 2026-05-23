@@ -7,13 +7,13 @@ const Footer = () => {
 
                 <div className="w-full flex justify-center items-center select-none overflow-hidden mt-0 pt-0">
                     <h1 className="text-[14vw] md:text-[16vw] font-black tracking-tighter leading-none text-[#C5B39A] font-mono uppercase">
-                        SNAP
+                        BUDLY
                     </h1>
                 </div>
 
                 <div className="w-full grid grid-cols-2 md:grid-cols-5 gap-y-4 text-xs md:text-sm font-medium text-zinc-400 tracking-wide mt-8 border-t border-transparent">
                     <div className="text-zinc-500 order-5 md:order-1 col-span-2 md:col-span-1 pt-4 md:pt-0">
-                        2026 © Snap
+                        2026 © Budly
                     </div>
                     <div className="hover:text-white transition-colors duration-200 cursor-pointer order-1 md:order-2">
                         <a href="#contact">Contact</a>

@@ -134,7 +134,7 @@ function Vision() {
                     </h2>
 
                     <p className="mt-3 text-[11px] uppercase tracking-[0.25em] text-[#746857]">
-                        SNAP VISION
+                        BUDLY VISION
                     </p>
                 </div>
 
