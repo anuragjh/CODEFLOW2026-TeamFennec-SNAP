@@ -8,7 +8,6 @@ const GetStarted = () => {
 
             <div className="w-full max-w-md border border-[#e3d5ba]/10 bg-black/40 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
 
-                {/* Title */}
                 <h1 className="text-4xl text-center tracking-wide text-[#e3d5ba]">
                     {isLogin ? "LOGIN" : "SIGN UP"}
                 </h1>
@@ -17,7 +16,6 @@ const GetStarted = () => {
                     {isLogin ? "Welcome back" : "Create your account"}
                 </p>
 
-                {/* Form */}
                 <form className="flex flex-col gap-5">
 
                     {!isLogin && (
@@ -48,7 +46,6 @@ const GetStarted = () => {
                     </button>
                 </form>
 
-                {/* Toggle */}
                 <div className="text-center mt-6 text-[#93856d] tracking-widest text-sm">
                     {isLogin ? (
                         <>

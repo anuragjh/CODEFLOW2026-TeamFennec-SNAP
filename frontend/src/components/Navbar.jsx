@@ -31,7 +31,6 @@ const Navbar = () => {
             >
                 <div className="w-full max-w-[1440px] mx-auto flex justify-between items-center">
 
-                    {/* Logo */}
                     <Link
                         to="/"
                         className="group relative text-[24px] font-black tracking-[0.25em] text-[#e3d5ba] font-mono select-none overflow-hidden block"
@@ -48,8 +47,8 @@ const Navbar = () => {
                     <nav className="hidden md:flex items-center gap-10 text-[14px] font-medium tracking-[0.15em] uppercase text-[#93856d]">
                         {[
                             { name: 'Vision', path: '/vision' },
-                            { name: 'Careers', path: '/careers' },
-                            { name: 'Get Started', path: '/getstarted' },
+                            { name: 'About us', path: '/aboutus' },
+                            { name: 'Get Started', path: '/getStarted' },
                         ].map((item) => (
                             <Link
                                 key={item.name}
