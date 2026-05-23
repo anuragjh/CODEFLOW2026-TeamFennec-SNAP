@@ -4,7 +4,8 @@ import Vision from "./pages/Vision.jsx";
 import Navbar from "./components/Navbar.jsx";
 import React from "react";
 import Footer from "./components/Footer.jsx";
-import GetStared from "./components/GetStarted.jsx";
+import GetStarted from "./pages/GetStarted.jsx";
+import AboutUs from "./pages/AboutUs.jsx";
 
 function App() {
 
@@ -14,10 +15,9 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/vision" element={<Vision />} />
+                <Route path="/aboutus" element={<AboutUs />} />
                 <Route path="/getStarted" element={<GetStarted />} />
                 {/*<Route path="/shop" element={<Shop />} />*/}
-                {/*<Route path="/aboutus" element={<AboutUs />} />*/}
-
                 {/*<Route path="*" element={<NotFound />} />*/}
             </Routes>
             <Footer/>
