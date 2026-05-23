@@ -4,6 +4,8 @@
 
 SNAP (Smart Neural AI for Plant Safety) is an **AI-powered edge monitoring system** designed to improve **factory safety, machine monitoring, and anomaly detection in near real time**. The system continuously monitors workers and machines using **computer vision, AI models, and simulated sensor data** to detect safety violations, abnormal machine behavior, and operational risks.
 
+---
+
 ## Problem Statement
 
 We have chosen **Kernopy Problem Statement 1: AI-Powered Edge Anomaly Detection for Factory Floors**
@@ -29,7 +31,7 @@ SNAP provides a **real-time intelligent monitoring solution** that detects anoma
 
 ---
 
-## 👥 Team
+## Team
 
 Developed for Hackathon Project.
 
