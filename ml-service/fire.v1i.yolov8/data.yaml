@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['Fire', 'Smoke']
+
+roboflow:
+  workspace: sridatri-chakrabarti
+  project: fire-h2gkf-fnkav
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/sridatri-chakrabarti/fire-h2gkf-fnkav/dataset/1

@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 18
+names: ['0', '1', '2', '3', '4', 'Glass', 'Gloves', 'Helmet', 'No-Helmet', 'Person', 'Safety-Boot', 'Safety-Vest', 'boots', 'glasses', 'gloves', 'helmet', 'no vest', 'vest']
+
+roboflow:
+  workspace: sridatri-chakrabarti
+  project: googles-ym58a-cdos8
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/sridatri-chakrabarti/googles-ym58a-cdos8/dataset/1
