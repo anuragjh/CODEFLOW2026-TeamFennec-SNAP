@@ -1,12 +1,12 @@
 import React from 'react';
 import Landing from "../components/Landing.jsx";
-import Navbar from "../components/Navbar.jsx";
+import FeaturesGrid from "../components/FeaturesGrid.jsx";
 
 const Home = () => {
   return (
     <div>
-        <Navbar/>
-      <Landing/>
+        <Landing/>
+        <FeaturesGrid/>
     </div>
   );
 };
