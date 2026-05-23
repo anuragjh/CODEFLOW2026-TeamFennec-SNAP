@@ -25,8 +25,8 @@ SNAP provides a **real-time intelligent monitoring solution** that detects anoma
 
 ## Expected Outcome
 
-* Detect factory-floor conditions in near real time
-* Improve worker safety compliance
+* Detect factory-floor conditions in near real time.
+* Improve worker safety compliance 
 * Prevent machine failures before breakdown
 * Generate alerts, logs, and dashboard updates instantly
 
