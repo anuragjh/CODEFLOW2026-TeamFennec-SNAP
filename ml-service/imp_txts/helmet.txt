@@ -1,0 +1,10 @@
+| Class         | mAP50 |
+| ------------- | ----- |
+| helmet_blue   | 99.5% |
+| helmet_white  | 91.1% |
+| helmet_yellow | 79.3% |
+
+
+Overall:
+
+mAP50 = 0.90
