@@ -16,7 +16,7 @@ const AboutUsPage = () => {
             quote: "Designing robust backend systems that keep industrial intelligence running reliably at scale.",
         },
         {
-            name: "Sridatri Chakraborti",
+            name: "Sridatri Chakrabarti",
             designation: "Backend / Systems",
             src: sridatri,
             quote: "Building the core logic that transforms raw data into meaningful system intelligence.",
