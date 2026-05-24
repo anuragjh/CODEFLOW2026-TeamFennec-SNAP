@@ -182,7 +182,6 @@ const GetStarted = () => {
                         </>
                     )}
                 </div>
-
             </div>
         </div>
     );
