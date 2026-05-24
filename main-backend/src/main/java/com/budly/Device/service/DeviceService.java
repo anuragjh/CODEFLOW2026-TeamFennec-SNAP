@@ -1,6 +1,5 @@
 package com.budly.Device.service;
 
-
 import com.budly.Device.enums.DeviceStatus;
 import com.budly.Device.model.Device;
 import com.budly.Device.model.User;
@@ -36,40 +35,25 @@ public class DeviceService {
         return deviceRepository.save(device);
     }
 
-@Transactional
-public Device assignDeviceToUser(
-        String deviceCode,
-        User user
-) {
+    @Transactional
+    public Device assignDeviceToUser(User user) {
 
-    Device device = deviceRepository
-            .findByDeviceCode(deviceCode)
-            .orElseThrow(() ->
-                    new ResourceNotFoundException(
-                            "Device not found"
-                    )
-            );
+        Device device = deviceRepository
+                .findFirstByStatusAndUserIsNull(
+                        DeviceStatus.AVAILABLE
+                )
+                .orElseThrow(() ->
+                        new DeviceUnavailableException(
+                                "No available device found"
+                        )
+                );
 
-    if (device.getStatus() != DeviceStatus.AVAILABLE) {
+        device.setUser(user);
 
-        throw new DeviceUnavailableException(
-                "Device is not available"
-        );
+        device.setStatus(DeviceStatus.SOLD);
+
+        return deviceRepository.save(device);
     }
-
-    if (device.getUser() != null) {
-
-        throw new DeviceUnavailableException(
-                "Device already assigned"
-        );
-    }
-
-    device.setUser(user);
-
-    device.setStatus(DeviceStatus.SOLD);
-
-    return deviceRepository.save(device);
-}
 
     @Transactional
     public Device reserveDevice(String deviceCode) {
@@ -89,7 +73,6 @@ public Device assignDeviceToUser(
         return deviceRepository.save(device);
     }
 
-
     @Transactional
     public Device releaseReservedDevice(String deviceCode) {
 
@@ -104,30 +87,23 @@ public Device assignDeviceToUser(
         return deviceRepository.save(device);
     }
 
-    /*
-     * Get all available devices
-     */
     public List<Device> getAvailableDevices() {
         return deviceRepository.findByStatus(DeviceStatus.AVAILABLE);
     }
-
 
     public List<Device> getSoldDevices() {
         return deviceRepository.findByStatus(DeviceStatus.SOLD);
     }
 
-
     public List<Device> getReservedDevices() {
         return deviceRepository.findByStatus(DeviceStatus.RESERVED);
     }
-
 
     public Device getDevice(String deviceCode) {
         return deviceRepository.findByDeviceCode(deviceCode)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Device not found"));
     }
-
 
     public long availableStockCount() {
         return deviceRepository.countByStatus(DeviceStatus.AVAILABLE);

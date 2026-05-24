@@ -9,7 +9,5 @@ public class PaymentOrderRequest {
 
     private String userEmail;
 
-    private String deviceCode;
-
     private double amount;
 }

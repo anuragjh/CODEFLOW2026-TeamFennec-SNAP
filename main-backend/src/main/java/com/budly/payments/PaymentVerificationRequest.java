@@ -15,7 +15,5 @@ public class PaymentVerificationRequest {
 
     private String userEmail;
 
-    private String deviceCode;
-
     private double amount;
 }

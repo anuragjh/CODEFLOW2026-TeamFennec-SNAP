@@ -28,7 +28,6 @@ public class PurchaseService {
     public void onSuccessPurchase(
             String userName,
             String userEmail,
-            String deviceCode,
             double amount,
             String orderId,
             String paymentId
@@ -42,11 +41,11 @@ public class PurchaseService {
 
                     generatedPassword[0] =
                             "BDLY-" +
-                            UUID.randomUUID()
-                                    .toString()
-                                    .replace("-", "")
-                                    .substring(0, 10)
-                                    .toUpperCase();
+                                    UUID.randomUUID()
+                                            .toString()
+                                            .replace("-", "")
+                                            .substring(0, 10)
+                                            .toUpperCase();
 
                     User newUser = User.builder()
                             .email(userEmail.toLowerCase())
@@ -62,7 +61,6 @@ public class PurchaseService {
                 });
 
         Device device = deviceService.assignDeviceToUser(
-                deviceCode,
                 user
         );
 

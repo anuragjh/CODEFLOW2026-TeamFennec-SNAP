@@ -48,7 +48,7 @@ const Navbar = () => {
                         {[
                             { name: 'Vision', path: '/vision' },
                             { name: 'About us', path: '/aboutus' },
-                            { name: 'Get Started', path: '/getStarted' },
+                            { name: 'Monitor', path: '/getStarted' },
                             { name: 'Pricing', path: '/pricing' }
 
                         ].map((item) => (
@@ -105,7 +105,7 @@ const Navbar = () => {
                     {[
                         { name: 'Vision', path: '/vision' },
                         { name: 'Careers', path: '/careers' },
-                        { name: 'Get Started', path: '/getstarted' },
+                        { name: 'Monitor', path: '/getstarted' },
                     ].map((item, index) => (
                         <Link
                             key={item.name}

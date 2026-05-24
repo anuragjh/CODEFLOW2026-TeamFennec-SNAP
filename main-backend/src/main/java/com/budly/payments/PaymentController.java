@@ -27,7 +27,6 @@ public class PaymentController {
         return new RazorpayClient(keyId, keySecret);
     }
 
-
     @PostMapping("/create-order")
     public Map<String, Object> createOrder(
             @RequestBody PaymentOrderRequest req
@@ -49,12 +48,10 @@ public class PaymentController {
                 "txn_" + System.currentTimeMillis()
         );
 
-
         JSONObject notes = new JSONObject();
 
         notes.put("userName", req.getUserName());
         notes.put("userEmail", req.getUserEmail());
-        notes.put("deviceCode", req.getDeviceCode());
 
         orderRequest.put("notes", notes);
 
@@ -66,7 +63,6 @@ public class PaymentController {
                 "key", keyId
         );
     }
-
 
     @PostMapping("/verify")
     public Map<String, String> verify(
@@ -101,11 +97,9 @@ public class PaymentController {
             );
         }
 
-
         purchaseService.onSuccessPurchase(
                 req.getUserName(),
                 req.getUserEmail(),
-                req.getDeviceCode(),
                 req.getAmount(),
                 req.getOrderId(),
                 req.getPaymentId()
