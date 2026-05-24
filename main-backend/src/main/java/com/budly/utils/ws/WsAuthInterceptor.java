@@ -14,7 +14,8 @@ import java.util.Map;
 public class WsAuthInterceptor
         implements HandshakeInterceptor {
 
-    private final JwtService jwtService;
+    private final JwtService
+            jwtService;
 
     @Override
     public boolean beforeHandshake(
@@ -27,18 +28,23 @@ public class WsAuthInterceptor
         try {
 
             System.out.println(
-                    "WS HANDSHAKE START"
+                    "WS HANDSHAKE STARTED"
             );
 
             String query =
-                    request.getURI().getQuery();
+                    request.getURI()
+                            .getQuery();
 
             System.out.println(
                     "QUERY: " + query
             );
 
-            if (query == null ||
-                    !query.startsWith("token=")) {
+            if (
+                    query == null ||
+                    !query.startsWith(
+                            "token="
+                    )
+            ) {
 
                 System.out.println(
                         "TOKEN MISSING"
@@ -50,49 +56,29 @@ public class WsAuthInterceptor
             String token =
                     query.substring(6);
 
-            System.out.println(
-                    "TOKEN RECEIVED"
-            );
-
-            boolean valid =
-                    jwtService.validateWsToken(
-                            token
-                    );
-
-            System.out.println(
-                    "TOKEN VALID: " + valid
-            );
-
-            if (!valid) {
-
-                System.out.println(
-                        "INVALID WS TOKEN"
-                );
-
-                return false;
-            }
-
             Claims claims =
-                    jwtService.extractAllClaims(
-                            token
+                    jwtService
+                            .extractAllClaims(
+                                    token
+                            );
+
+            String topic =
+                    claims.get(
+                            "topic",
+                            String.class
                     );
 
             System.out.println(
-                    "CLAIMS: " + claims
+                    "TOKEN VALID"
             );
 
-            attributes.put(
-                    "email",
-                    claims.getSubject()
+            System.out.println(
+                    "TOPIC: " + topic
             );
 
             attributes.put(
                     "topic",
-                    claims.get("topic")
-            );
-
-            System.out.println(
-                    "WS AUTH SUCCESS"
+                    topic
             );
 
             return true;
@@ -100,7 +86,7 @@ public class WsAuthInterceptor
         } catch (Exception e) {
 
             System.out.println(
-                    "WS AUTH ERROR"
+                    "WS AUTH FAILED"
             );
 
             e.printStackTrace();
@@ -118,7 +104,7 @@ public class WsAuthInterceptor
     ) {
 
         System.out.println(
-                "AFTER HANDSHAKE"
+                "WS HANDSHAKE COMPLETED"
         );
     }
 }

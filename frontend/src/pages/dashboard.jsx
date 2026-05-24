@@ -1,200 +1,922 @@
-import React, { useState } from "react";
+import React, {
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
+
+import {
+    useDispatch,
+    useSelector,
+} from "react-redux";
+
+import {
+    useNavigate,
+} from "react-router-dom";
+
+import {
+    AlertTriangle,
+    Flame,
+    HardHat,
+    LogOut,
+    ShieldAlert,
+    Thermometer,
+    User,
+    Users,
+    Waves,
+} from "lucide-react";
+
+import {
+    logout,
+} from "../store/authSlice";
+
+import {
+    connectWebSocket,
+} from "../backend_apis/ws.js";
 
 const Dashboard = () => {
-    const [videoAvailable, setVideoAvailable] = useState(true);
-    const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([
-        {
-            role: "assistant",
-            text: "Budly AI connected.",
-        },
-    ]);
 
-    const [stats] = useState({
-        people: 3,
-        peopleDanger: "NO",
-        accessoriesDanger: "YES",
-        accessories: "2/4",
-    });
+    const navigate =
+        useNavigate();
 
-    const sendMessage = () => {
-        if (!message.trim()) return;
+    const dispatch =
+        useDispatch();
 
-        setMessages((prev) => [
-            ...prev,
-            {
-                role: "user",
-                text: message,
-            },
-            {
-                role: "assistant",
-                text: "Processing request...",
-            },
-        ]);
+    const {
+        token,
+        deviceCodes,
+        isAuthenticated,
+    } = useSelector(
+        (state) => state.auth
+    );
 
-        setMessage("");
+    const [socketStatus, setSocketStatus] =
+        useState("CONNECTING");
+
+    const [liveData, setLiveData] =
+        useState(null);
+
+    const [videoAvailable, setVideoAvailable] =
+        useState(true);
+
+    const [logs, setLogs] =
+        useState([]);
+
+    const [dangerModal, setDangerModal] =
+        useState(false);
+
+    const [equipmentModal, setEquipmentModal] =
+        useState(false);
+
+    const liveMonitorRef =
+        useRef(null);
+
+    const addLog = (
+        type,
+        message
+    ) => {
+
+        const time =
+            new Date()
+                .toLocaleTimeString();
+
+        setLogs((prev) => {
+
+            const updated = [
+
+                ...prev,
+
+                {
+                    time,
+                    type,
+                    message,
+                },
+            ];
+
+            return updated.slice(-60);
+        });
     };
 
+    useEffect(() => {
+
+        if (
+            !isAuthenticated ||
+            !token
+        ) {
+
+            navigate(
+                "/getstarted",
+                {
+                    replace: true,
+                }
+            );
+
+            return;
+        }
+
+        if (
+            !deviceCodes ||
+            deviceCodes.length === 0
+        ) {
+
+            addLog(
+                "ERROR",
+                "No devices found"
+            );
+
+            return;
+        }
+
+        const deviceCode =
+            deviceCodes[0];
+
+        const topic =
+            `monitor/${deviceCode}`;
+
+        let socket;
+
+        const initializeSocket =
+            async () => {
+
+                try {
+
+                    addLog(
+                        "INFO",
+                        `Connecting to ${topic}`
+                    );
+
+                    socket =
+                        await connectWebSocket({
+
+                            topic,
+
+                            onOpen: () => {
+
+                                setSocketStatus(
+                                    "CONNECTED"
+                                );
+
+                                addLog(
+                                    "SUCCESS",
+                                    "Realtime monitoring active"
+                                );
+                            },
+
+                            onMessage: (
+                                data
+                            ) => {
+
+                                console.log(
+                                    "LIVE DATA:",
+                                    data
+                                );
+
+                                setLiveData(
+                                    data
+                                );
+
+                                addLog(
+                                    "LIVE",
+                                    JSON.stringify(
+                                        data
+                                    )
+                                );
+                            },
+
+                            onClose: (
+                                event
+                            ) => {
+
+                                setSocketStatus(
+                                    "DISCONNECTED"
+                                );
+
+                                addLog(
+                                    "CLOSE",
+                                    `Socket closed (${event.code})`
+                                );
+                            },
+
+                            onError: () => {
+
+                                setSocketStatus(
+                                    "ERROR"
+                                );
+
+                                addLog(
+                                    "ERROR",
+                                    "Realtime websocket failed"
+                                );
+                            },
+                        });
+
+                } catch (error) {
+
+                    setSocketStatus(
+                        "ERROR"
+                    );
+
+                    addLog(
+                        "ERROR",
+                        error?.message ||
+                        "Failed to connect"
+                    );
+                }
+            };
+
+        initializeSocket();
+
+        return () => {
+
+            if (socket) {
+
+                socket.close();
+            }
+        };
+
+    }, [
+        token,
+        deviceCodes,
+        isAuthenticated,
+        navigate,
+    ]);
+
+    const handleLogout =
+        () => {
+
+            dispatch(
+                logout()
+            );
+
+            navigate(
+                "/getstarted",
+                {
+                    replace: true,
+                }
+            );
+        };
+
+    const people =
+        liveData?.people || [];
+
+    const peopleCount =
+        liveData?.ppl_number || 0;
+
+    const hasDanger =
+        people.some(
+            (person) =>
+                person.falling === "Y"
+        );
+
+    const hasFire =
+        people.some(
+            (person) =>
+                person.fire === "Y"
+        );
+
+    const hasSmoke =
+        people.some(
+            (person) =>
+                person.smoke === "Y"
+        );
+
+    const equipmentIssues =
+        people.filter(
+            (person) =>
+                person.helmet_wearing === "N" ||
+                person.goggle === "N"
+        );
+
+    const connectionLost =
+        socketStatus !== "CONNECTED";
+
+    const liveStatus =
+        useMemo(() => {
+
+            if (
+                connectionLost
+            ) {
+
+                return "No connection to monitoring system";
+            }
+
+            if (hasFire) {
+
+                return "Fire detected";
+            }
+
+            if (hasSmoke) {
+
+                return "Smoke detected";
+            }
+
+            return "No fire or smoke detected";
+
+        }, [
+            connectionLost,
+            hasFire,
+            hasSmoke,
+        ]);
+
     return (
-        <div className="min-h-screen bg-black text-[#e3d5ba] mt-20 p-3 sm:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto border border-[#2f2a24] rounded-[24px] sm:rounded-[36px] p-4 lg:p-6 bg-[#050505]">
 
-                {/* Responsive Grid System */}
-                <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 items-start">
+        <div className="min-h-screen bg-black text-[#e3d5ba] px-4 md:px-8 py-6 overflow-hidden">
 
-                    {/* LEFT PANEL: Media & Diagnostics */}
-                    <div className="space-y-6 w-full min-w-0">
+            <div className="max-w-7xl mx-auto border border-[#2b2721] rounded-[38px] p-4 md:p-6 bg-[#050505]">
 
-                        {/* VIDEO STREAM CONTAINER */}
-                        <div className="border border-[#2f2a24] rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#080808] h-[220px] sm:h-[320px] lg:h-[380px] relative w-full">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+
+                    <div>
+
+                        <h1 className="text-4xl font-semibold tracking-tight">
+                            Budly Monitor
+                        </h1>
+
+                        <p className="text-[#7d7366] mt-1">
+                            Real-time industrial monitoring
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+
+                        <div className="border border-[#2b2721] bg-[#0d0d0d] rounded-2xl px-4 py-3 flex items-center gap-3">
+
+                            <div className="w-11 h-11 rounded-full bg-[#151515] flex items-center justify-center">
+
+                                <User
+                                    size={18}
+                                />
+                            </div>
+
+                            <div>
+
+                                <p className="font-medium">
+                                    Admin
+                                </p>
+
+                                <p className="text-xs text-[#7d7366]">
+                                    {deviceCodes?.[0]}
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={
+                                handleLogout
+                            }
+                            className="border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 transition-all duration-300 rounded-2xl px-5 py-3 flex items-center gap-2 text-red-300"
+                        >
+
+                            <LogOut
+                                size={18}
+                            />
+
+                            Logout
+                        </button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-[1.5fr_0.8fr] gap-6">
+
+                    <div className="space-y-6">
+
+                        <div className="border border-[#2b2721] rounded-[32px] overflow-hidden bg-[#090909] h-[300px] md:h-[420px] relative">
+
                             {videoAvailable ? (
+
                                 <img
                                     src="http://192.168.31.155:8080/video"
                                     alt="Live Stream"
                                     className="w-full h-full object-cover"
-                                    onError={() => setVideoAvailable(false)}
+                                    onError={() =>
+                                        setVideoAvailable(false)
+                                    }
                                 />
+
                             ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center text-center p-6">
-                                    <p className="text-[#e3d5ba] text-lg sm:text-xl font-medium">
-                                        No Video Available
+
+                                <div className="w-full h-full flex flex-col items-center justify-center text-center">
+
+                                    <p className="text-2xl">
+                                        No Video Feed
                                     </p>
-                                    <p className="text-[#746a5e] text-xs sm:text-sm mt-2">
-                                        IP Camera stream unavailable
+
+                                    <p className="text-[#7d7366] mt-2">
+                                        Camera system unavailable
                                     </p>
                                 </div>
                             )}
 
-                            {/* Status Indicator Overlays */}
-                            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-black/70 backdrop-blur-md border border-[#2f2a24] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                    <span className="text-[10px] sm:text-xs tracking-[0.25em] uppercase font-medium">
-                                        Live
+                            <div className="absolute top-5 left-5 border border-[#2b2721] bg-black/70 backdrop-blur-xl rounded-full px-4 py-2 flex items-center gap-2">
+
+                                <div className={`w-2 h-2 rounded-full ${
+                                    socketStatus === "CONNECTED"
+                                        ? "bg-green-500"
+                                        : socketStatus === "ERROR"
+                                        ? "bg-red-500"
+                                        : "bg-yellow-500"
+                                }`} />
+
+                                <span className="uppercase tracking-[0.25em] text-xs">
+
+                                    {socketStatus}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+
+                            <div className="border border-[#2b2721] rounded-[28px] bg-[#090909] p-5 min-h-[170px] flex flex-col justify-between">
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+                                        People
                                     </span>
+
+                                    <Users
+                                        size={18}
+                                    />
+                                </div>
+
+                                <div className="text-6xl font-semibold">
+                                    {peopleCount}
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() =>
+                                    setDangerModal(
+                                        true
+                                    )
+                                }
+                                className={`border rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between text-left transition-all duration-300 ${
+                                    hasDanger
+                                        ? "border-red-500/20 bg-red-500/10"
+                                        : "border-[#2b2721] bg-[#090909]"
+                                }`}
+                            >
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+                                        Danger
+                                    </span>
+
+                                    <ShieldAlert
+                                        size={18}
+                                    />
+                                </div>
+
+                                <div>
+
+                                    <div className={`text-4xl font-semibold ${
+                                        hasDanger
+                                            ? "text-red-400"
+                                            : "text-green-400"
+                                    }`}>
+
+                                        {hasDanger
+                                            ? "Unsafe"
+                                            : "Safe"}
+                                    </div>
+
+                                    <p className="text-xs mt-2 text-[#7d7366]">
+                                        Tap to inspect safety
+                                    </p>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    setEquipmentModal(
+                                        true
+                                    )
+                                }
+                                className={`border rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between text-left transition-all duration-300 ${
+                                    equipmentIssues.length > 0
+                                        ? "border-yellow-500/20 bg-yellow-500/10"
+                                        : "border-[#2b2721] bg-[#090909]"
+                                }`}
+                            >
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+                                        Equipments
+                                    </span>
+
+                                    <HardHat
+                                        size={18}
+                                    />
+                                </div>
+
+                                <div>
+
+                                    <div className={`text-4xl font-semibold ${
+                                        equipmentIssues.length > 0
+                                            ? "text-yellow-300"
+                                            : "text-green-400"
+                                    }`}>
+
+                                        {equipmentIssues.length > 0
+                                            ? "Issues"
+                                            : "Safe"}
+                                    </div>
+
+                                    <p className="text-xs mt-2 text-[#7d7366]">
+                                        Tap to inspect equipment
+                                    </p>
+                                </div>
+                            </button>
+
+                            <div className={`border rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between ${
+                                hasFire || hasSmoke
+                                    ? "border-red-500/20 bg-red-500/10"
+                                    : "border-[#2b2721] bg-[#090909]"
+                            }`}>
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+                                        Fire & Smoke
+                                    </span>
+
+                                    <Flame
+                                        size={18}
+                                    />
+                                </div>
+
+                                <div>
+
+                                    <div className={`text-2xl font-semibold leading-tight ${
+                                        hasFire || hasSmoke
+                                            ? "text-red-400"
+                                            : "text-green-400"
+                                    }`}>
+
+                                        {liveStatus}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border border-[#2b2721] rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between bg-[#090909]">
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+                                        Gas Levels
+                                    </span>
+
+                                    <Waves
+                                        size={18}
+                                    />
+                                </div>
+
+                                <div>
+
+                                    <div className="text-3xl font-semibold">
+                                        Stable
+                                    </div>
+
+                                    <p className="text-xs mt-3 text-[#7d7366]">
+                                        MQ sensor integration pending
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border border-[#2b2721] rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between bg-[#090909]">
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+                                        Temperature
+                                    </span>
+
+                                    <Thermometer
+                                        size={18}
+                                    />
+                                </div>
+
+                                <div>
+
+                                    <div className="text-3xl font-semibold">
+                                        28°C
+                                    </div>
+
+                                    <p className="text-xs mt-3 text-[#7d7366]">
+                                        Thermal sensor integration pending
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* METRICS & STATS GRID */}
-                        <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-                            {/* People Counter */}
-                            <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
-                                <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
-                                    People
-                                </div>
-                                <div className="text-3xl sm:text-5xl font-light mt-2">
-                                    {stats.people}
-                                </div>
-                            </div>
+                        <div className="border border-dashed border-[#2b2721] rounded-[30px] h-[130px] bg-[#070707] flex items-center justify-center">
 
-                            {/* People Safety Status */}
-                            <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
-                                <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
-                                    People Danger
-                                </div>
-                                <div className={`text-2xl sm:text-4xl font-light mt-2 ${
-                                    stats.peopleDanger === "YES" ? "text-red-400" : "text-green-400"
-                                }`}>
-                                    {stats.peopleDanger}
-                                </div>
-                            </div>
-
-                            {/* Accessories Tracked */}
-                            <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
-                                <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
-                                    Accessories
-                                </div>
-                                <div className="text-3xl sm:text-5xl font-light mt-2">
-                                    {stats.accessories}
-                                </div>
-                            </div>
-
-                            {/* Accessories Threat Index */}
-                            <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
-                                <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
-                                    Acc. Danger
-                                </div>
-                                <div className={`text-2xl sm:text-4xl font-light mt-2 ${
-                                    stats.accessoriesDanger === "YES" ? "text-red-400" : "text-green-400"
-                                }`}>
-                                    {stats.accessoriesDanger}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* AUXILIARY AUDIO MODULE */}
-                        <div className="border border-dashed border-[#2f2a24] rounded-[24px] sm:rounded-[30px] h-[110px] sm:h-[130px] bg-[#070707] flex items-center justify-center p-4">
                             <div className="text-center">
-                                <p className="text-[#e3d5ba] uppercase tracking-[0.25em] text-xs sm:text-sm font-medium">
+
+                                <p className="uppercase tracking-[0.3em] text-sm">
                                     Audio Module
                                 </p>
-                                <p className="text-[#746a5e] text-xs sm:text-sm mt-1.5">
-                                    Reserved for future voice controls
+
+                                <p className="text-[#7d7366] text-sm mt-2">
+                                    Reserved for future integrations
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* RIGHT PANEL: Conversational Interface */}
-                    <div className="border border-[#2f2a24] rounded-[24px] sm:rounded-[30px] bg-[#080808] flex flex-col h-[500px] sm:h-[600px] lg:h-[calc(100vh-120px)] lg:min-h-[680px] w-full overflow-hidden">
+                    <div className="border border-[#2b2721] rounded-[32px] bg-[#090909] flex flex-col h-[1000px] overflow-hidden">
 
-                        {/* Header Context */}
-                        <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-[#1b1b1b] bg-[#0a0a0a]">
-                            <h2 className="text-xl sm:text-2xl font-light">
-                                Budly AI
+                        <div className="px-6 py-5 border-b border-[#171717]">
+
+                            <h2 className="text-3xl font-semibold">
+                                Live Monitor
                             </h2>
-                            <p className="text-[#7d7366] text-xs sm:text-sm mt-0.5">
-                                Industrial monitoring assistant
+
+                            <p className="text-[#7d7366] mt-1">
+                                Realtime websocket system logs
                             </p>
                         </div>
 
-                        {/* Chat Feed (Now with active responsive scrolling) */}
-                        <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 custom-scrollbar">
-                            {messages.map((msg, index) => (
-                                <div
-                                    key={index}
-                                    className={`max-w-[85%] px-4 py-2.5 sm:py-3 rounded-[16px] sm:rounded-2xl text-xs sm:text-sm leading-relaxed break-words ${
-                                        msg.role === "user"
-                                            ? "bg-[#e3d5ba] text-black ml-auto rounded-tr-none"
-                                            : "bg-[#121212] text-[#e3d5ba] border border-[#1b1b1b] rounded-tl-none"
-                                    }`}
-                                >
-                                    {msg.text}
-                                </div>
-                            ))}
-                        </div>
+                        <div
+                            ref={liveMonitorRef}
+                            className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4"
+                        >
 
-                        {/* Input Deck */}
-                        <div className="p-3 sm:p-4 border-t border-[#1b1b1b] bg-[#060606]">
-                            <div className="flex items-center gap-2 sm:gap-3">
-                                <input
-                                    type="text"
-                                    placeholder="Ask Budly AI..."
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                            sendMessage();
-                                        }
-                                    }}
-                                    className="flex-1 bg-[#090909] border border-[#222] rounded-xl sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-3 outline-none text-xs sm:text-sm text-[#e3d5ba] placeholder-[#5c544b] focus:border-[#e3d5ba]/40 transition w-full"
-                                />
-                                <button
-                                    onClick={sendMessage}
-                                    className="bg-[#e3d5ba] text-black font-medium text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl hover:bg-[#d4c5aa] active:scale-95 transition-all shrink-0"
-                                >
-                                    Send
-                                </button>
-                            </div>
-                        </div>
+                            {logs.map(
+                                (
+                                    log,
+                                    index
+                                ) => (
 
+                                    <div
+                                        key={index}
+                                        className={`rounded-3xl border p-4 ${
+                                            log.type === "ERROR"
+                                                ? "border-red-500/20 bg-red-500/10"
+                                                : log.type === "SUCCESS"
+                                                ? "border-green-500/20 bg-green-500/10"
+                                                : log.type === "LIVE"
+                                                ? "border-[#2b2721] bg-[#111111]"
+                                                : "border-[#2b2721] bg-[#0d0d0d]"
+                                        }`}
+                                    >
+
+                                        <div className="flex items-center justify-between mb-3">
+
+                                            <span className="uppercase tracking-[0.2em] text-xs">
+
+                                                {log.type}
+                                            </span>
+
+                                            <span className="text-xs opacity-60">
+
+                                                {log.time}
+                                            </span>
+                                        </div>
+
+                                        <pre className="text-xs whitespace-pre-wrap break-words leading-relaxed overflow-hidden">
+
+                                            {log.message}
+                                        </pre>
+                                    </div>
+                                )
+                            )}
+                        </div>
                     </div>
                 </div>
-
             </div>
+
+            {dangerModal && (
+
+                <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+
+                    <div className="w-full max-w-3xl border border-[#2b2721] rounded-[32px] bg-[#080808] p-6 max-h-[90vh] overflow-y-auto">
+
+                        <div className="flex items-center justify-between mb-6">
+
+                            <h2 className="text-3xl font-semibold">
+                                Danger Analysis
+                            </h2>
+
+                            <button
+                                onClick={() =>
+                                    setDangerModal(
+                                        false
+                                    )
+                                }
+                                className="text-[#7d7366]"
+                            >
+                                Close
+                            </button>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+
+                            {people.length > 0 ? (
+
+                                people.map(
+                                    (
+                                        person,
+                                        index
+                                    ) => (
+
+                                        <div
+                                            key={index}
+                                            className={`border rounded-3xl p-5 ${
+                                                person.falling === "Y"
+                                                    ? "border-red-500/20 bg-red-500/10"
+                                                    : "border-[#2b2721] bg-[#0d0d0d]"
+                                            }`}
+                                        >
+
+                                            <div className="flex items-center justify-between mb-5">
+
+                                                <h3 className="text-2xl font-semibold">
+
+                                                    Person {
+                                                        person.person_id
+                                                    }
+                                                </h3>
+
+                                                <div className={`px-4 py-2 rounded-full text-sm ${
+                                                    person.falling === "Y"
+                                                        ? "bg-red-500/20 text-red-300"
+                                                        : "bg-green-500/20 text-green-300"
+                                                }`}>
+
+                                                    {person.falling === "Y"
+                                                        ? "Unsafe"
+                                                        : "Safe"}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between">
+
+                                                <span>
+                                                    Falling
+                                                </span>
+
+                                                <span className={
+                                                    person.falling === "Y"
+                                                        ? "text-red-400"
+                                                        : "text-green-400"
+                                                }>
+
+                                                    {person.falling === "Y"
+                                                        ? "Detected"
+                                                        : "No"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )
+                                )
+
+                            ) : (
+
+                                <div className="text-[#7d7366]">
+                                    No people detected
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {equipmentModal && (
+
+                <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+
+                    <div className="w-full max-w-4xl border border-[#2b2721] rounded-[32px] bg-[#080808] p-6 max-h-[90vh] overflow-y-auto">
+
+                        <div className="flex items-center justify-between mb-6">
+
+                            <h2 className="text-3xl font-semibold">
+                                Equipment Analysis
+                            </h2>
+
+                            <button
+                                onClick={() =>
+                                    setEquipmentModal(
+                                        false
+                                    )
+                                }
+                                className="text-[#7d7366]"
+                            >
+                                Close
+                            </button>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+
+                            {people.length > 0 ? (
+
+                                people.map(
+                                    (
+                                        person,
+                                        index
+                                    ) => (
+
+                                        <div
+                                            key={index}
+                                            className="border border-[#2b2721] rounded-3xl bg-[#0d0d0d] p-5"
+                                        >
+
+                                            <div className="flex items-center justify-between mb-5">
+
+                                                <h3 className="text-2xl font-semibold">
+
+                                                    Person {
+                                                        person.person_id
+                                                    }
+                                                </h3>
+
+                                                <div className={`px-4 py-2 rounded-full text-sm ${
+                                                    person.helmet_wearing === "Y" &&
+                                                    person.goggle === "Y"
+                                                        ? "bg-green-500/20 text-green-300"
+                                                        : "bg-yellow-500/20 text-yellow-300"
+                                                }`}>
+
+                                                    {person.helmet_wearing === "Y" &&
+                                                    person.goggle === "Y"
+                                                        ? "Protected"
+                                                        : "Missing Equipment"}
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-4">
+
+                                                <div className="flex items-center justify-between">
+
+                                                    <span>
+                                                        Helmet
+                                                    </span>
+
+                                                    <span className={
+                                                        person.helmet_wearing === "Y"
+                                                            ? "text-green-400"
+                                                            : "text-red-400"
+                                                    }>
+
+                                                        {person.helmet_wearing === "Y"
+                                                            ? "Wearing"
+                                                            : "Not Wearing"}
+                                                    </span>
+                                                </div>
+
+                                                <div className="flex items-center justify-between">
+
+                                                    <span>
+                                                        Goggles
+                                                    </span>
+
+                                                    <span className={
+                                                        person.goggle === "Y"
+                                                            ? "text-green-400"
+                                                            : "text-red-400"
+                                                    }>
+
+                                                        {person.goggle === "Y"
+                                                            ? "Wearing"
+                                                            : "Not Wearing"}
+                                                    </span>
+                                                </div>
+
+                                                <div className="flex items-center justify-between">
+
+                                                    <span>
+                                                        Fire
+                                                    </span>
+
+                                                    <span className={
+                                                        person.fire === "Y"
+                                                            ? "text-red-400"
+                                                            : "text-green-400"
+                                                    }>
+
+                                                        {person.fire === "Y"
+                                                            ? "Detected"
+                                                            : "No"}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                )
+
+                            ) : (
+
+                                <div className="text-[#7d7366]">
+                                    No equipment data available
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
-
 export default Dashboard;

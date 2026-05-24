@@ -9,6 +9,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 @RequiredArgsConstructor
 public class MonitorSocketHandler
@@ -16,10 +19,15 @@ public class MonitorSocketHandler
 
     private final ObjectMapper mapper;
 
+    private final Set<WebSocketSession> sessions =
+            ConcurrentHashMap.newKeySet();
+
     @Override
     public void afterConnectionEstablished(
             WebSocketSession session
     ) throws Exception {
+
+        sessions.add(session);
 
         System.out.println(
                 "WS CONNECTED SUCCESSFULLY"
@@ -117,6 +125,41 @@ public class MonitorSocketHandler
 
             System.out.println(json);
 
+            for (
+                    WebSocketSession ws :
+                    sessions
+            ) {
+
+                try {
+
+                    String wsTopic =
+                            (String) ws
+                                    .getAttributes()
+                                    .get("topic");
+
+                    if (
+                            ws.isOpen()
+                            &&
+                            topic.equals(wsTopic)
+                    ) {
+
+                        ws.sendMessage(
+                                new TextMessage(
+                                        json.toString()
+                                )
+                        );
+                    }
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println(
+                    "MESSAGE BROADCASTED"
+            );
+
             System.out.println(
                     "================================="
             );
@@ -155,6 +198,8 @@ public class MonitorSocketHandler
             CloseStatus status
     ) throws Exception {
 
+        sessions.remove(session);
+
         System.out.println(
                 "WS CLOSED"
         );
@@ -169,4 +214,3 @@ public class MonitorSocketHandler
         );
     }
 }
-

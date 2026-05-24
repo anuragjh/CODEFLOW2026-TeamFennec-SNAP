@@ -5,9 +5,9 @@ import Navbar from "./components/Navbar.jsx";
 import React from "react";
 import Footer from "./components/Footer.jsx";
 import GetStarted from "./pages/GetStarted.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import Pricing from "./pages/Pricing.jsx";
+import Dashboard from "./pages/dashboard.jsx";
 
 
 function App() {

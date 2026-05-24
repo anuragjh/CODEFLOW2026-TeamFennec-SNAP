@@ -1,26 +1,38 @@
-// src/backend_apis/ws.js
-
 import api from "./config/api.js";
 
-export const getWsToken = async (topic) => {
+
+export const getWsToken = async (
+    topic
+) => {
 
     try {
 
         const token =
-            localStorage.getItem("token");
+            localStorage.getItem(
+                "token"
+            );
 
-        const response = await api.post(
-            "/api/ws/token",
-            {
-                topic,
-            },
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${token}`,
+        if (!token) {
+
+            throw new Error(
+                "JWT token missing"
+            );
+        }
+
+        const response =
+            await api.post(
+                "/api/ws/token",
+                {
+                    topic,
                 },
-            }
-        );
+                {
+                    headers: {
+
+                        Authorization:
+                            `Bearer ${token}`,
+                    },
+                }
+            );
 
         return response.data;
 
@@ -47,92 +59,136 @@ export const getWsToken = async (topic) => {
 };
 
 
-export const connectWebSocket = ({
-    wsToken,
-    topic,
-    onMessage,
-    onOpen,
-    onClose,
-    onError,
-}) => {
-
-    const socket = new WebSocket(
-        `ws://localhost:8094/ws?token=${wsToken}`
-    );
-
-    socket.onopen = () => {
-
-        console.log(
-            "WS CONNECTED"
-        );
-
-        socket.send(
-            JSON.stringify({
-                type: "subscribe",
-                topic,
-            })
-        );
-
-        if (onOpen) {
-            onOpen();
-        }
-    };
-
-    socket.onmessage = (event) => {
+export const connectWebSocket =
+    async ({
+        topic,
+        onMessage,
+        onOpen,
+        onClose,
+        onError,
+    }) => {
 
         try {
 
-            const data =
-                JSON.parse(event.data);
+            const response =
+                await getWsToken(
+                    topic
+                );
 
-            console.log(
-                "WS MESSAGE:",
-                data
-            );
+            const wsToken =
+                response.wsToken;
 
-            if (onMessage) {
+            if (!wsToken) {
 
-                onMessage(data);
+                throw new Error(
+                    "WS token missing"
+                );
             }
 
-        } catch {
+            const socket =
+                new WebSocket(
+                    `ws://localhost:8094/ws/monitor?token=${wsToken}`
+                );
 
-            console.log(
-                "WS RAW:",
-                event.data
+            socket.onopen = () => {
+
+                console.log(
+                    "WS CONNECTED"
+                );
+
+                console.log(
+                    "TOPIC:",
+                    topic
+                );
+
+                if (onOpen) {
+
+                    onOpen(socket);
+                }
+            };
+
+            socket.onmessage = (
+                event
+            ) => {
+
+                try {
+
+                    const data =
+                        JSON.parse(
+                            event.data
+                        );
+
+                    console.log(
+                        "LIVE WS MESSAGE:",
+                        data
+                    );
+
+                    if (onMessage) {
+
+                        onMessage(
+                            data
+                        );
+                    }
+
+                } catch (e) {
+
+                    console.log(
+                        "RAW WS MESSAGE:",
+                        event.data
+                    );
+
+                    if (onMessage) {
+
+                        onMessage(
+                            event.data
+                        );
+                    }
+                }
+            };
+
+            socket.onerror = (
+                error
+            ) => {
+
+                console.error(
+                    "WS ERROR:",
+                    error
+                );
+
+                if (onError) {
+
+                    onError(
+                        error
+                    );
+                }
+            };
+
+            socket.onclose = (
+                event
+            ) => {
+
+                console.log(
+                    "WS CLOSED:",
+                    event
+                );
+
+                if (onClose) {
+
+                    onClose(
+                        event
+                    );
+                }
+            };
+
+            return socket;
+
+        } catch (error) {
+
+            console.error(
+                "CONNECT WS ERROR:",
+                error
             );
 
-            if (onMessage) {
-
-                onMessage(event.data);
-            }
+            throw error;
         }
     };
-
-    socket.onerror = (error) => {
-
-        console.error(
-            "WS ERROR:",
-            error
-        );
-
-        if (onError) {
-
-            onError(error);
-        }
-    };
-
-    socket.onclose = () => {
-
-        console.log(
-            "WS DISCONNECTED"
-        );
-
-        if (onClose) {
-
-            onClose();
-        }
-    };
-
-    return socket;
-};
