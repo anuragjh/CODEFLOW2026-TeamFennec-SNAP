@@ -23,7 +23,7 @@ function App() {
                 <Route path="/getstarted" element={<GetStarted />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/aboutus" element={<AboutUs />} />
-                <Route path="/pricing" element={<Plans/>}/>
+                <Route path="/pricing" element={<Pricing />}/>
                 {/*<Route path="/shop" element={<Shop />} />*/}
                 {/*<Route path="*" element={<NotFound />} />*/}
             </Routes>
