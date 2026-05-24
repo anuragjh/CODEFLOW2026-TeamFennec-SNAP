@@ -109,7 +109,7 @@ const GetStarted = () => {
                     {isLogin ? "Welcome back" : "Create your account"}
                 </p>
 
-                {/* Form Handling with FormData */}
+
                 <form
                     className="flex flex-col gap-5"
                     onSubmit={(e) => {
@@ -135,16 +135,16 @@ const GetStarted = () => {
                 >
                     <input
                         type="email"
-                        name="email" // <-- Added name attribute
-                        required    // <-- Browser-level fallback validation
+                        name="email"
+                        required
                         placeholder="EMAIL"
                         className="bg-transparent border border-[#e3d5ba]/20 p-3 text-[#e3d5ba] placeholder-[#93856d] outline-none tracking-widest uppercase"
                     />
 
                     <input
                         type="password"
-                        name="password" // <-- Added name attribute
-                        required       // <-- Browser-level fallback validation
+                        name="password"
+                        required
                         placeholder="PASSWORD"
                         className="bg-transparent border border-[#e3d5ba]/20 p-3 text-[#e3d5ba] placeholder-[#93856d] outline-none tracking-widest uppercase"
                     />
@@ -162,7 +162,7 @@ const GetStarted = () => {
                         <>
                             DON'T HAVE AN ACCOUNT?{" "}
                             <button
-                                type="button" // <-- Explicitly type="button" to prevent form bugs
+                                type="button"
                                 onClick={() => setIsLogin(false)}
                                 className="text-[#e3d5ba] hover:underline"
                             >
@@ -173,7 +173,7 @@ const GetStarted = () => {
                         <>
                             ALREADY HAVE AN ACCOUNT?{" "}
                             <button
-                                type="button" // <-- Explicitly type="button" to prevent form bugs
+                                type="button"
                                 onClick={() => setIsLogin(true)}
                                 className="text-[#e3d5ba] hover:underline"
                             >
