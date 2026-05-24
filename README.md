@@ -26,7 +26,9 @@ SNAP provides a **real-time intelligent monitoring solution** that detects anoma
   <img src="C:\Users\mybub\Downloads\SYSTEMDES.drawio.png" width="700"/>
 </p>
 ---
-
+<p align="center">
+  <img src="./assets/system_desgin.jpeg" alt="SNAP System Design"/>
+</p>
 ## Expected Outcome
 
 * Detect factory-floor conditions in near real time.
