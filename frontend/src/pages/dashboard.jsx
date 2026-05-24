@@ -39,10 +39,13 @@ const Dashboard = () => {
         <div className="min-h-screen bg-black text-[#e3d5ba] p-3 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto border border-[#2f2a24] rounded-[24px] sm:rounded-[36px] p-4 lg:p-6 bg-[#050505]">
 
+                {/* Responsive Grid System */}
                 <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 items-start">
 
+                    {/* LEFT PANEL: Media & Diagnostics */}
                     <div className="space-y-6 w-full min-w-0">
 
+                        {/* VIDEO STREAM CONTAINER */}
                         <div className="border border-[#2f2a24] rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#080808] h-[220px] sm:h-[320px] lg:h-[380px] relative w-full">
                             {videoAvailable ? (
                                 <img
@@ -62,17 +65,20 @@ const Dashboard = () => {
                                 </div>
                             )}
 
+                            {/* Status Indicator Overlays */}
                             <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-black/70 backdrop-blur-md border border-[#2f2a24] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                                     <span className="text-[10px] sm:text-xs tracking-[0.25em] uppercase font-medium">
-Live
-</span>
+                                        Live
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
+                        {/* METRICS & STATS GRID */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+                            {/* People Counter */}
                             <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
                                 <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
                                     People
@@ -82,6 +88,7 @@ Live
                                 </div>
                             </div>
 
+                            {/* People Safety Status */}
                             <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
                                 <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
                                     People Danger
@@ -93,6 +100,7 @@ Live
                                 </div>
                             </div>
 
+                            {/* Accessories Tracked */}
                             <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
                                 <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
                                     Accessories
@@ -102,6 +110,7 @@ Live
                                 </div>
                             </div>
 
+                            {/* Accessories Threat Index */}
                             <div className="border border-[#2f2a24] rounded-[20px] sm:rounded-[26px] bg-[#080808] p-4 sm:p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between">
                                 <div className="text-[#7d7366] uppercase tracking-[0.15em] text-[10px] sm:text-xs">
                                     Acc. Danger
@@ -114,6 +123,7 @@ Live
                             </div>
                         </div>
 
+                        {/* AUXILIARY AUDIO MODULE */}
                         <div className="border border-dashed border-[#2f2a24] rounded-[24px] sm:rounded-[30px] h-[110px] sm:h-[130px] bg-[#070707] flex items-center justify-center p-4">
                             <div className="text-center">
                                 <p className="text-[#e3d5ba] uppercase tracking-[0.25em] text-xs sm:text-sm font-medium">
@@ -126,8 +136,10 @@ Live
                         </div>
                     </div>
 
+                    {/* RIGHT PANEL: Conversational Interface */}
                     <div className="border border-[#2f2a24] rounded-[24px] sm:rounded-[30px] bg-[#080808] flex flex-col h-[500px] sm:h-[600px] lg:h-[calc(100vh-120px)] lg:min-h-[680px] w-full overflow-hidden">
 
+                        {/* Header Context */}
                         <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-[#1b1b1b] bg-[#0a0a0a]">
                             <h2 className="text-xl sm:text-2xl font-light">
                                 Budly AI
@@ -137,6 +149,7 @@ Live
                             </p>
                         </div>
 
+                        {/* Chat Feed (Now with active responsive scrolling) */}
                         <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 custom-scrollbar">
                             {messages.map((msg, index) => (
                                 <div
@@ -152,6 +165,7 @@ Live
                             ))}
                         </div>
 
+                        {/* Input Deck */}
                         <div className="p-3 sm:p-4 border-t border-[#1b1b1b] bg-[#060606]">
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <input
