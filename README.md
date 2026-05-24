@@ -36,4 +36,3 @@ SNAP provides a **real-time intelligent monitoring solution** that detects anoma
 
 Developed for Hackathon Project.
 
-**

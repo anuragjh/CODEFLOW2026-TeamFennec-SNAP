@@ -5,7 +5,11 @@ import Navbar from "./components/Navbar.jsx";
 import React from "react";
 import Footer from "./components/Footer.jsx";
 import GetStarted from "./pages/GetStarted.jsx";
+
 import Dashboard from "./pages/Dashboard.jsx";
+
+
+import AboutUs from "./pages/AboutUs.jsx";
 
 
 function App() {
@@ -18,9 +22,8 @@ function App() {
                 <Route path="/vision" element={<Vision />} />
                 <Route path="/getstarted" element={<GetStarted />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/aboutus" element={<AboutUs />} />
                 {/*<Route path="/shop" element={<Shop />} />*/}
-                {/*<Route path="/aboutus" element={<AboutUs />} />*/}
-
                 {/*<Route path="*" element={<NotFound />} />*/}
             </Routes>
             <Footer/>
