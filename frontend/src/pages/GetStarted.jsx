@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const GetStarted = () => {
     const [isLogin, setIsLogin] = useState(true);
+    const navigate = useNavigate();
 
     return (
         <div className="min-h-screen flex items-center justify-center px-6">
 
             <div className="w-full max-w-md border border-[#e3d5ba]/10 bg-black/40 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
 
-                {/* Title */}
+
                 <h1 className="text-4xl text-center tracking-wide text-[#e3d5ba]">
                     {isLogin ? "LOGIN" : "SIGN UP"}
                 </h1>
@@ -17,16 +19,19 @@ const GetStarted = () => {
                     {isLogin ? "Welcome back" : "Create your account"}
                 </p>
 
-                {/* Form */}
-                <form className="flex flex-col gap-5">
 
-                    {!isLogin && (
-                        <input
-                            type="text"
-                            placeholder="FULL NAME"
-                            className="bg-transparent border border-[#e3d5ba]/20 p-3 text-[#e3d5ba] placeholder-[#93856d] outline-none tracking-widest uppercase"
-                        />
-                    )}
+                   <form
+
+                       className="flex flex-col gap-5"
+                       onSubmit={(e) => {
+                           e.preventDefault();
+                           if (isLogin) {
+                               navigate("/dashboard");
+                           } else {
+                     alert("Signup API not connected yet");
+                    }
+                }}
+            >
 
                     <input
                         type="email"
@@ -48,7 +53,7 @@ const GetStarted = () => {
                     </button>
                 </form>
 
-                {/* Toggle */}
+
                 <div className="text-center mt-6 text-[#93856d] tracking-widest text-sm">
                     {isLogin ? (
                         <>
