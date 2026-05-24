@@ -23,7 +23,7 @@ Small issues such as **missing safety gear, unusual vibration, overheating, unsa
 
 SNAP provides a **real-time intelligent monitoring solution** that detects anomalies instantly and generates alerts.
 <p align="center">
-  <img src="./SYSTEM_DES.drawio.png" width="700"/>
+  <img src=""C:\Users\mybub\Downloads\SYSTEMDES.drawio.png"" width="700"/>
 </p>
 ---
 
@@ -39,4 +39,53 @@ SNAP provides a **real-time intelligent monitoring solution** that detects anoma
 ## Team
 
 Developed for Hackathon Project.
+
+## ## Team Contributions
+
+### Aman
+- Complete hardware integration
+- ESP32 setup and sensor communication
+- Backend integration support
+- Backend developer
+
+
+### Sridartri
+- Backend development
+- Mailjet email notification integration
+- Razorpay payment gateway integration
+- Authentication and backend services
+- Vercel connect, DNS setup
+
+### Prachi
+- Frontend development
+- Dashboard and responsive interface implementation
+- UI/UX designing
+  
+
+### Nandini
+- Frontend development
+- Real-time dashboard integration
+- WebSocket-based frontend communication
+
+## Workflow
+
+1. ESP32 collects sensor data from connected devices.
+2. Camera and audio streams are processed in real time.
+3. Python AI services analyze incoming data.
+4. Backend services manage authentication, APIs, and communication.
+5. Alerts and live updates are sent to the frontend dashboard.
+6. Data is stored securely using PostgreSQL and Redis.
+
+---
+## Deployment & Services
+
+- Dockerized services
+- NGINX reverse proxy
+- SSL certification enabled
+- Custom domain hosting
+- Mailjet email services
+- Razorpay payment integration
+
+---
+
 
