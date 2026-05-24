@@ -1,2 +1,6 @@
 ultralytics
 opencv-python
+psycopg2-binary
+soundfile
+numpy
+requests

@@ -1,19 +1,21 @@
 import time
 import json
 import cv2
+from db_logger import MonitoringDatabase
+from danger_audio import DangerAudioDetector
 
 from ultralytics import YOLO
 
 from ws_sender import MonitorSocketClient
 
 
-TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnVyYWdqaGF2NTFAZ21haWwuY29tIiwidG9waWMiOiJtb25pdG9yL1BPVFMtMTAwOSIsInR5cGUiOiJXUyIsImlhdCI6MTc3OTYyOTE4MywiZXhwIjoxNzc5NjI5NDgzfQ.gsdFJ4_JTqnZx_VXge-R0A3O1Nj00VTGo4rsumX0HTU"
+TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnVyYWdqaGF2NTFAZ21haWwuY29tIiwidG9waWMiOiJtb25pdG9yL1BPVFMtMTAwOSIsInR5cGUiOiJXUyIsImlhdCI6MTc3OTYzMTY3OSwiZXhwIjoxNzc5NjMxOTc5fQ.44zMWSKrJloDxMwN6Ag-kVw2qoLfGvguztDTbFrC_1c"
 
 
 socket_client = MonitorSocketClient(
     ws_url=f"ws://localhost:8094/ws/monitor?token={TOKEN}"
 )
-
+database = MonitoringDatabase()
 
 helmet_model = YOLO(
     "helmet.v1i.yolov8/runs/detect/train/weights/best.pt"
@@ -422,8 +424,11 @@ while True:
         current_time - last_sent_time
         >= send_interval
     ):
-
         socket_client.send(
+            output
+        )
+
+        database.save_monitoring_data(
             output
         )
 
@@ -460,3 +465,4 @@ cap.release()
 cv2.destroyAllWindows()
 
 socket_client.close()
+database.close()

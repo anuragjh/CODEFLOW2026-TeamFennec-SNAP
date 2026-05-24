@@ -50,6 +50,90 @@ const Dashboard = () => {
         (state) => state.auth
     );
 
+    const [audioAvailable, setAudioAvailable] =
+    useState(true);
+
+const [audioBars, setAudioBars] =
+    useState(
+        Array.from(
+            { length: 24 },
+            () => 10
+        )
+    );
+
+useEffect(() => {
+
+    let interval;
+
+    const checkAudio =
+        async () => {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://192.168.31.155:8080/audio.wav",
+                        {
+                            method: "HEAD",
+                        }
+                    );
+
+                setAudioAvailable(
+                    response.ok
+                );
+
+            } catch {
+
+                setAudioAvailable(
+                    false
+                );
+            }
+        };
+
+    checkAudio();
+
+    interval = setInterval(
+        checkAudio,
+        5000
+    );
+
+    return () =>
+        clearInterval(
+            interval
+        );
+
+}, []);
+
+useEffect(() => {
+
+    if (!audioAvailable) {
+
+        return;
+    }
+
+    const waveformInterval =
+        setInterval(() => {
+
+            setAudioBars(
+
+                Array.from(
+                    { length: 24 },
+                    () =>
+                        Math.floor(
+                            Math.random() * 90
+                        ) + 10
+                )
+            );
+
+        }, 120);
+
+    return () =>
+        clearInterval(
+            waveformInterval
+        );
+
+}, [audioAvailable]);
+
     const [socketStatus, setSocketStatus] =
         useState("CONNECTING");
 
@@ -610,20 +694,61 @@ const Dashboard = () => {
                                 </div>
                             </div>
                         </div>
+<div className="border border-[#2b2721] rounded-[30px] h-[150px] bg-[#070707] px-6 py-5 overflow-hidden">
 
-                        <div className="border border-dashed border-[#2b2721] rounded-[30px] h-[130px] bg-[#070707] flex items-center justify-center">
+    <div className="flex items-center justify-between mb-5">
 
-                            <div className="text-center">
+        <div>
 
-                                <p className="uppercase tracking-[0.3em] text-sm">
-                                    Audio Module
-                                </p>
+            <p className="uppercase tracking-[0.3em] text-sm">
+                Audio Module
+            </p>
 
-                                <p className="text-[#7d7366] text-sm mt-2">
-                                    Reserved for future integrations
-                                </p>
-                            </div>
-                        </div>
+            <p className="text-[#7d7366] text-xs mt-1">
+
+                {audioAvailable
+                    ? "Realtime industrial audio monitoring"
+                    : "Audio system unavailable"}
+            </p>
+        </div>
+
+        <div className={`w-3 h-3 rounded-full ${
+            audioAvailable
+                ? "bg-green-500"
+                : "bg-red-500"
+        }`} />
+    </div>
+
+    {audioAvailable ? (
+
+        <div className="h-[80px] flex items-center justify-center gap-[7px] overflow-hidden">
+
+            {audioBars.map(
+                (
+                    height,
+                    index
+                ) => (
+
+                    <div
+                        key={index}
+                        className="w-[2px] bg-[#3b9eff] rounded-full transition-all duration-100"
+                        style={{
+                            height: `${height}px`,
+                        }}
+                    />
+                )
+            )}
+        </div>
+
+    ) : (
+
+        <div className="h-[80px] flex items-center justify-center text-[#7d7366]">
+
+            No Audio Feed Available
+        </div>
+    )}
+</div>
+
                     </div>
 
                     <div className="border border-[#2b2721] rounded-[32px] bg-[#090909] flex flex-col h-[1000px] overflow-hidden">
