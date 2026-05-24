@@ -22,7 +22,9 @@ Factory floors require continuous monitoring of:
 Small issues such as **missing safety gear, unusual vibration, overheating, unsafe movement, machine idle time, and abnormal machine behavior** are often detected too late.
 
 SNAP provides a **real-time intelligent monitoring solution** that detects anomalies instantly and generates alerts.
-
+<p align="center">
+  <img src="./SYSTEM_DES.drawio.png" width="700"/>
+</p>
 ---
 
 ## Expected Outcome
