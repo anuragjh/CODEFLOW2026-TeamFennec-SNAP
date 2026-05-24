@@ -49,6 +49,8 @@ const Navbar = () => {
                             { name: 'Vision', path: '/vision' },
                             { name: 'About us', path: '/aboutus' },
                             { name: 'Get Started', path: '/getStarted' },
+                            { name: 'Pricing', path: '/pricing' }
+
                         ].map((item) => (
                             <Link
                                 key={item.name}

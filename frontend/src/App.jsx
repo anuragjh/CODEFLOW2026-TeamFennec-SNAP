@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 
 
 import AboutUs from "./pages/AboutUs.jsx";
+import Pricing from "./pages/Pricing.jsx";
 
 
 function App() {

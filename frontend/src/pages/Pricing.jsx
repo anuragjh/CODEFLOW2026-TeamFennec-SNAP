@@ -51,7 +51,7 @@ export default function PricingPage() {
     return (
         <div className="min-h-screen bg-black text-[#fff7dd] px-8 py-20">
 
-            {/* Hero */}
+
             <div className="max-w-5xl mx-auto text-center mb-24">
 
                 <p className="uppercase tracking-[0.3em] text-[#c8ad86] text-sm mb-6">
@@ -71,7 +71,7 @@ export default function PricingPage() {
                 </p>
             </div>
 
-            {/* Pricing Cards */}
+
             <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
 
                 {plans.map((plan, index) => (
@@ -84,14 +84,14 @@ export default function PricingPage() {
                         }`}
                     >
 
-                        {/* Badge */}
+
                         {plan.highlighted && (
                             <div className="mb-8 inline-flex items-center border border-[#c8ad86] px-4 py-2 rounded-full text-xs tracking-[0.2em] text-[#c8ad86]">
                                 MOST ADOPTED
                             </div>
                         )}
 
-                        {/* Plan */}
+
                         <h2 className="text-3xl font-light mb-4">
                             {plan.name}
                         </h2>
@@ -100,7 +100,7 @@ export default function PricingPage() {
                             {plan.description}
                         </p>
 
-                        {/* Price */}
+
                         <div className="mb-12">
               <span className="text-5xl font-light">
                 {plan.price}

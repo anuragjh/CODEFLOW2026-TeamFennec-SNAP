@@ -119,7 +119,6 @@ const GetStarted = () => {
                         const email = formData.get("email");
                         const password = formData.get("password");
 
-                        // Prevent proceeding if fields are blank
                         if (!email || !password) {
                             alert("Please enter both your email and password.");
                             return;
