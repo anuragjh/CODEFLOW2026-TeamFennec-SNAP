@@ -9,15 +9,17 @@ class MonitoringDatabase:
 
             self.connection = psycopg2.connect(
 
-                host="localhost",
+                host="ep-ancient-morning-aq2fzmcx-pooler.c-8.us-east-1.aws.neon.tech",
 
                 port=5432,
 
-                database="snap",
+                database="neondb",
 
-                user="myuser",
+                user="neondb_owner",
 
-                password="2007"
+                password="npg_Xm4hVbTKSL5c",
+
+                sslmode="require"
             )
 
             self.connection.autocommit = True

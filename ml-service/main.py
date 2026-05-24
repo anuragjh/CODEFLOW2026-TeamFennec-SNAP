@@ -9,7 +9,8 @@ from ultralytics import YOLO
 from ws_sender import MonitorSocketClient
 
 
-TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnVyYWdqaGF2NTFAZ21haWwuY29tIiwidG9waWMiOiJtb25pdG9yL1BPVFMtMTAwOSIsInR5cGUiOiJXUyIsImlhdCI6MTc3OTYzMzMwMiwiZXhwIjoxNzc5NjMzNjAyfQ.V3dR4TuDkJ1ta65s73xk_0YU9Otoja5LEktxQERpykY"
+
+TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnVyYWdqaGF2NTFAZ21haWwuY29tIiwidG9waWMiOiJtb25pdG9yL1BPVFMtMTAwOSIsInR5cGUiOiJXUyIsImlhdCI6MTc3OTYzOTQ3MCwiZXhwIjoxNzc5NjQyNDcwfQ.dF7JAPyB9zsdwzjFSby48YzPo1hrufMvftgkoc7u5T4"
 
 
 socket_client = MonitorSocketClient(
@@ -41,6 +42,7 @@ person_model = YOLO(
 url = "http://192.168.31.155:8080/video"
 
 cap = cv2.VideoCapture(url)
+
 
 if not cap.isOpened():
 

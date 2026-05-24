@@ -101,7 +101,7 @@ public class JwtService {
                 .expiration(
                         new Date(
                                 System.currentTimeMillis()
-                                        + 30000000000
+                                        + 3000000
                         )
                 )
                 .signWith(

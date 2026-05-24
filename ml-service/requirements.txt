@@ -4,3 +4,6 @@ psycopg2-binary
 soundfile
 numpy
 requests
+openai==2.33.0
+openrouter
+httpx

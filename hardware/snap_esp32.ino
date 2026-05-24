@@ -5,6 +5,7 @@
 #define DHTPIN 4
 #define DHTTYPE DHT11
 
+
 const int gasPin = 35;
 
 const char* ssid = "AMAN";
