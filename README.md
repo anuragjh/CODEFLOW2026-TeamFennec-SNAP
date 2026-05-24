@@ -23,7 +23,7 @@ Small issues such as **missing safety gear, unusual vibration, overheating, unsa
 
 SNAP provides a **real-time intelligent monitoring solution** that detects anomalies instantly and generates alerts.
 <p align="center">
-  <img src=""C:\Users\mybub\Downloads\SYSTEMDES.drawio.png"" width="700"/>
+  <img src="C:\Users\mybub\Downloads\SYSTEMDES.drawio.png" width="700"/>
 </p>
 ---
 
