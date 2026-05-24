@@ -6,6 +6,10 @@ import React, {
 } from "react";
 
 import {
+    connectMQTT,
+} from "../lib/mqttClient.js";
+
+import {
     useDispatch,
     useSelector,
 } from "react-redux";
@@ -60,6 +64,59 @@ const [audioBars, setAudioBars] =
             () => 10
         )
     );
+
+useEffect(() => {
+
+    const mqtt =
+        connectMQTT({
+
+            topic:
+                "snap/sensor/data",
+
+            onMessage:
+                (message) => {
+
+                    console.log(
+                        "LIVE SENSOR:",
+                        message
+                    );
+
+                    const sensorData =
+                        message?.data;
+
+                    if (
+                        sensorData?.temperature !== undefined
+                    ) {
+
+                        setTemperature(
+                            sensorData.temperature
+                        );
+                    }
+
+                    if (
+                        sensorData?.gas_data !== undefined
+                    ) {
+
+                        setGasLevel(
+                            sensorData.gas_data
+                        );
+                    }
+
+                    addLog(
+                        "SENSOR",
+                        JSON.stringify(
+                            sensorData
+                        )
+                    );
+                },
+        });
+
+    return () => {
+
+        mqtt?.end();
+    };
+
+}, []);
 
 useEffect(() => {
 
@@ -134,6 +191,11 @@ useEffect(() => {
 
 }, [audioAvailable]);
 
+    const [temperature, setTemperature] =
+    useState("--");
+
+const [gasLevel, setGasLevel] =
+    useState("--");
     const [socketStatus, setSocketStatus] =
         useState("CONNECTING");
 
@@ -644,55 +706,78 @@ useEffect(() => {
                                 </div>
                             </div>
 
-                            <div className="border border-[#2b2721] rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between bg-[#090909]">
+                        <div className={`border rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between ${
+    Number(gasLevel) > 2500
+        ? "border-red-500/20 bg-red-500/10"
+        : "border-[#2b2721] bg-[#090909]"
+}`}>
 
-                                <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between">
 
-                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
-                                        Gas Levels
-                                    </span>
+        <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+            Gas Levels
+        </span>
 
-                                    <Waves
-                                        size={18}
-                                    />
-                                </div>
+        <Waves
+            size={18}
+        />
+    </div>
 
-                                <div>
+    <div>
 
-                                    <div className="text-3xl font-semibold">
-                                        Stable
-                                    </div>
+        <div className={`text-4xl font-semibold ${
+            Number(gasLevel) > 2500
+                ? "text-red-400"
+                : "text-green-400"
+        }`}>
 
-                                    <p className="text-xs mt-3 text-[#7d7366]">
-                                        MQ sensor integration pending
-                                    </p>
-                                </div>
-                            </div>
+            {gasLevel}
+        </div>
 
-                            <div className="border border-[#2b2721] rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between bg-[#090909]">
+        <p className="text-xs mt-3 text-[#7d7366]">
 
-                                <div className="flex items-center justify-between">
+            {Number(gasLevel) > 2500
+                ? "Dangerous gas concentration"
+                : "Air quality stable"}
+        </p>
+    </div>
+</div>
+                          <div className={`border rounded-[28px] p-5 min-h-[170px] flex flex-col justify-between ${
+    Number(temperature) > 45
+        ? "border-orange-500/20 bg-orange-500/10"
+        : "border-[#2b2721] bg-[#090909]"
+}`}>
 
-                                    <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
-                                        Temperature
-                                    </span>
+    <div className="flex items-center justify-between">
 
-                                    <Thermometer
-                                        size={18}
-                                    />
-                                </div>
+        <span className="uppercase tracking-[0.2em] text-xs text-[#7d7366]">
+            Temperature
+        </span>
 
-                                <div>
+        <Thermometer
+            size={18}
+        />
+    </div>
 
-                                    <div className="text-3xl font-semibold">
-                                        28°C
-                                    </div>
+    <div>
 
-                                    <p className="text-xs mt-3 text-[#7d7366]">
-                                        Thermal sensor integration pending
-                                    </p>
-                                </div>
-                            </div>
+        <div className={`text-4xl font-semibold ${
+            Number(temperature) > 45
+                ? "text-orange-300"
+                : "text-green-400"
+        }`}>
+
+            {temperature}°C
+        </div>
+
+        <p className="text-xs mt-3 text-[#7d7366]">
+
+            {Number(temperature) > 45
+                ? "High temperature detected"
+                : "Temperature stable"}
+        </p>
+    </div>
+</div>
                         </div>
 <div className="border border-[#2b2721] rounded-[30px] h-[150px] bg-[#070707] px-6 py-5 overflow-hidden">
 
