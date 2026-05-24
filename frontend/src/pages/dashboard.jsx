@@ -36,7 +36,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black text-[#e3d5ba] p-3 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-black text-[#e3d5ba] mt-20 p-3 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto border border-[#2f2a24] rounded-[24px] sm:rounded-[36px] p-4 lg:p-6 bg-[#050505]">
 
                 {/* Responsive Grid System */}

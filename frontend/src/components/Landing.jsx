@@ -15,7 +15,6 @@ const Landing = () => {
           }}
       >
 
-
         <main className="flex-1 flex flex-col justify-center items-center text-center z-10 py-16 max-w-4xl mx-auto w-full">
 
 
@@ -62,7 +61,7 @@ const Landing = () => {
           </h1>
 
           <a
-              href="#vision"
+              href="/vision"
               className="group inline-flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e3d5ba] hover:text-white transition-colors duration-200"
           >
             Read vision
