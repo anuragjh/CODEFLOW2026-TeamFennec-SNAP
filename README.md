@@ -1,6 +1,6 @@
-# **SNAP**
+# **BUDLY**
 
-### **Smart Neural AI for Plant Safety**
+### **Smart Neural AI for Plant Safety (SNAP)**
 
 SNAP (Smart Neural AI for Plant Safety) is an **AI-powered edge monitoring system** designed to improve **factory safety, machine monitoring, and anomaly detection in near real time**. The system continuously monitors workers and machines using **computer vision, AI models, and simulated sensor data** to detect safety violations,abnormal vibrations and sounds, abnormal machine behavior, and operational risks.
 
