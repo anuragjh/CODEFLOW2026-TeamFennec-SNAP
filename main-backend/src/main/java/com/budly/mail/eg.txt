@@ -1,0 +1,312 @@
+package com.astrix.utils.mail;
+
+public class MailToSend {
+
+   public static String purchaseSuccessBody(String userName, String deviceName, String invoiceId) {
+    return """
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; background:#f7f8fa; padding:20px;">
+            <div style="max-width:600px; margin:0 auto; background:white; padding:30px; border-radius:12px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="https://www.astrixhome.studio/astrixlogowithoutbg.png" alt="Astrix Logo"
+                         style="width:130px; opacity:0.95;">
+                </div>
+
+                <h2 style="color:#2D57FF; margin-bottom:10px;">Hello %s,</h2>
+
+                <p>🎉 Thank you for your purchase! Your payment has been successfully processed and your device
+                <b>%s</b> is now being prepared for setup.</p>
+
+                <p><b>Invoice ID:</b> %s<br>
+                <b>Status:</b> Paid</p>
+
+                <h3 style="margin-top:20px; color:#2D57FF;">Next Steps:</h3>
+                <ul style="line-height:1.7; padding-left:18px;">
+                    <li>Your device will be assigned within 24 hours.</li>
+                    <li>Setup instructions will be sent to your registered email.</li>
+                    <li>You can monitor devices through the Astrix app or dashboard.</li>
+                </ul>
+
+                <p>📎 Your official invoice is attached to this email.</p>
+
+                <p>For any queries, contact:
+                    <a href="mailto:helpdesk@astrixhome.studio">helpdesk@astrixhome.studio</a>
+                </p>
+
+                <hr style="border:none; border-top:1px solid #eee; margin-top:25px;">
+
+                <p style="font-size:13px; color:#777; text-align:center;">
+                    Warm regards,<br>
+                    <b>The Astrix Team</b><br>
+                    <span style="font-size:11px; color:#aaa;">AI-based Smart Device Automation</span>
+                </p>
+            </div>
+        </div>
+    """.formatted(userName, deviceName, invoiceId);
+}
+public static String deviceAssignedBody(String userName, String deviceId, String deviceType) {
+    System.out.println("DEBUG username=" + userName);
+    System.out.println("DEBUG deviceType=" + deviceType);
+    System.out.println("DEBUG deviceId=" + deviceId);
+
+    return """
+        <div style="font-family:'Segoe UI', Arial; background:#f7f8fa; padding:20px;">
+            <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:12px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="https://www.astrixhome.studio/astrixlogowithoutbg.png" alt="Astrix Logo"
+                         style="width:130px; opacity:0.95;">
+                </div>
+
+                <h2 style="color:#2D57FF;">Hello %s 👋,</h2>
+
+                <p>Your Astrix device has been successfully <b>assigned</b> to your account.</p>
+
+                <table style="width:100%%; margin-top:15px; border-collapse:collapse;">
+                    <tr><td style="padding:8px 0; font-weight:bold;">Device Type:</td><td>%s</td></tr>
+                    <tr><td style="padding:8px 0; font-weight:bold;">Device ID:</td><td>%s</td></tr>
+                    <tr><td style="padding:8px 0; font-weight:bold;">Status:</td>
+                        <td style="color:#28A745;">Active & Ready ✅</td>
+                    </tr>
+                </table>
+
+                <h3 style="margin-top:25px; color:#2D57FF;">Next Steps:</h3>
+                <ul style="line-height:1.7; padding-left:18px;">
+                    <li>Use this Device ID when setting up your Astrix App.</li>
+                    <li>Your Astrix Ecosystem shipment will be processed within 7–14 days.</li>
+                    <li>Your Astrix AI Premium is active.</li>
+                </ul>
+
+                <p>Need help?
+                    <a href="mailto:helpdesk@astrixhome.studio" style="color:#2D57FF;">helpdesk@astrixhome.studio</a>
+                </p>
+
+                <hr style="border:none; border-top:1px solid #eee; margin-top:25px;">
+
+                <p style="font-size:13px; color:#777; text-align:center;">
+                    <b>The Astrix Team</b><br>
+                    <span style="font-size:11px; color:#aaa;">AI-Powered Smart Device Automation</span>
+                </p>
+            </div>
+        </div>
+    """.formatted(userName, deviceType, deviceId);
+}
+
+public static String passwordResetBody(String resetLink) {
+    return """
+        <div style="font-family:'Segoe UI', Arial; background:#f7f8fa; padding:20px;">
+            <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:12px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="https://www.astrixhome.studio/astrixlogowithoutbg.png" alt="Astrix Logo" style="width:120px; opacity:0.95;">
+                </div>
+
+                <h2 style="color:#2D57FF;">Hi User,</h2>
+
+                <p>We received a request to reset your Astrix account password.</p>
+
+                <p>This reset link will expire in <b>10 minutes</b>.</p>
+
+                <div style="text-align:center; margin:25px 0;">
+                    <a href="%s"
+                       style="background:#2D57FF; color:white; padding:12px 24px; text-decoration:none;
+                              border-radius:6px; display:inline-block; font-weight:600;">
+                        Reset Password
+                    </a>
+                </div>
+
+                <p>If the button doesn't work, use this link:</p>
+
+                <p style="font-size:14px; word-break:break-all;">%s</p>
+
+                <hr style="border:none; border-top:1px solid #eee; margin-top:25px;">
+
+                <p style="font-size:13px; color:#777; text-align:center;">
+                    <b>Astrix Security Team</b><br>
+                    <span style="font-size:11px; color:#aaa;">AI-Powered Smart Device Automation</span>
+                </p>
+            </div>
+        </div>
+    """.formatted(resetLink, resetLink);
+}
+public static String loginAlertBody(String userName, String attemptedAt) {
+    return """
+        <div style="font-family:'Segoe UI', Arial; background:#f7f8fa; padding:20px;">
+            <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:12px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="https://www.astrixhome.studio/astrixlogowithoutbg.png"
+                         alt="Astrix Logo" style="width:130px; opacity:0.95;">
+                </div>
+
+                <h2 style="color:#2D57FF;">Hello %s,</h2>
+
+                <p>We detected a <b>login attempt</b> on your Astrix account.</p>
+
+                <p>If this was <b>you</b>, you can safely ignore this message.</p>
+                <p>If this <b>wasn’t you</b>, we strongly recommend you reset your password immediately.</p>
+
+                <div style="background:#f1f4ff; padding:15px; border-radius:8px; margin:18px 0;">
+                    <p style="margin:0;"><b>Attempt Time:</b> %s</p>
+                    <p style="margin:0;"><b>Location:</b> Unknown (IP tracking not enabled)</p>
+                </div>
+
+                <div style="text-align:center; margin:25px 0;">
+                    <a href="https://astrixhome.studio/reset"
+                       style="background:#2D57FF; color:white; padding:12px 24px; text-decoration:none;
+                              border-radius:6px; display:inline-block; font-weight:600;">
+                        Reset Password
+                    </a>
+                </div>
+
+                <p>If you need help, contact
+                    <a href="mailto:helpdesk@astrixhome.studio" style="color:#2D57FF;">
+                        helpdesk@astrixhome.studio
+                    </a>
+                </p>
+
+                <hr style="border:none; border-top:1px solid #eee; margin-top:25px;">
+
+                <p style="font-size:13px; color:#777; text-align:center;">
+                    <b>Astrix Security Team</b><br>
+                    <span style="font-size:11px; color:#aaa;">Keeping your account safe</span>
+                </p>
+            </div>
+        </div>
+    """.formatted(userName, attemptedAt);
+}
+public static String welcomeMailBody(String userName) {
+    return """
+        <div style="font-family:'Segoe UI', Arial; background:#f7f8fa; padding:20px;">
+            <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:12px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="https://www.astrixhome.studio/astrixlogowithoutbg.png"
+                         alt="Astrix Logo" style="width:130px; opacity:0.95;">
+                </div>
+
+                <h2 style="color:#2D57FF;">Welcome to Astrix, %s! 🎉</h2>
+
+                <p>We're excited to have you onboard! Your Astrix account has been successfully created.</p>
+
+                <p>Astrix brings AI-powered automation to your fingertips — manage devices, set schedules,
+                and enjoy intelligent voice control across your smart home ecosystem.</p>
+
+                <h3 style="color:#2D57FF; margin-top:20px;">What you can do next</h3>
+
+                <ul style="line-height:1.7; padding-left:18px;">
+                    <li>Login to the Astrix App and explore premium AI features.</li>
+                    <li>Link your devices once they arrive.</li>
+                    <li>Enable voice commands and automations.</li>
+                    <li>Get 24/7 support directly from the app.</li>
+                </ul>
+
+                <div style="text-align:center; margin:25px 0;">
+                    <a href="https://astrixhome.studio/login"
+                       style="background:#2D57FF; color:white; padding:12px 24px; text-decoration:none;
+                              border-radius:6px; display:inline-block; font-weight:600;">
+                        Login Now
+                    </a>
+                </div>
+
+                <p>If you ever need help, feel free to reach out:
+                    <a href="mailto:helpdesk@astrixhome.studio" style="color:#2D57FF;">
+                        helpdesk@astrixhome.studio
+                    </a>
+                </p>
+
+                <hr style="border:none; border-top:1px solid #eee; margin-top:25px;">
+
+                <p style="font-size:13px; color:#777; text-align:center;">
+                    <b>The Astrix Team</b><br>
+                    <span style="font-size:11px; color:#aaa;">AI-Powered Smart Device Automation</span>
+                </p>
+            </div>
+        </div>
+    """.formatted(userName);
+}
+}
+
+    public synchronized void sendDeviceAssignmentMail(String to, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+            helper.setFrom("no-reply@astrixhome.studio");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true);
+
+            mailSender.send(message);
+            System.out.println("✅ Device assignment mail sent to: " + to);
+
+        } catch (MessagingException e) {
+            System.err.println("❌ Failed to send device assignment email to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /** -------------------- PASSWORD RESET MAIL -------------------- **/
+    public synchronized void sendResetPasswordMail(String to, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+            helper.setFrom("no-reply@astrixhome.studio");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true);
+
+            mailSender.send(message);
+            System.out.println("✅ Password reset mail sent to: " + to);
+
+        } catch (MessagingException e) {
+            System.err.println("❌ Failed to send reset password email to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /** -------------------- NEW: LOGIN ALERT MAIL -------------------- **/
+    public synchronized void sendLoginAlertMail(String to, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+            helper.setFrom("no-reply@astrixhome.studio");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true); // HTML body
+
+            mailSender.send(message);
+            System.out.println("⚠️ Login alert mail sent to: " + to);
+
+        } catch (MessagingException e) {
+            System.err.println("❌ Failed to send login alert email to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /** -------------------- NEW: WELCOME MAIL -------------------- **/
+    public synchronized void sendWelcomeMail(String to, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+            helper.setFrom("no-reply@astrixhome.studio");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true); // HTML body
+
+            mailSender.send(message);
+            System.out.println("🎉 Welcome mail sent to: " + to);
+
+        } catch (MessagingException e) {
+            System.err.println("❌ Failed to send welcome email to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }

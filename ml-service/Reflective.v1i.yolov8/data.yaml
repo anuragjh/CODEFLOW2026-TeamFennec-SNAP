@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Reflective vests']
+
+roboflow:
+  workspace: sridatri-chakrabarti
+  project: reflective-stfum-i49lh
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/sridatri-chakrabarti/reflective-stfum-i49lh/dataset/1
